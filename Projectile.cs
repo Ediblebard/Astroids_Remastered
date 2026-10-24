@@ -1,7 +1,6 @@
-
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Projectile : MonoBehaviour
 {
     [SerializeField] private float speed = 10f;
     [SerializeField] private float lifetime = 3f;
@@ -18,5 +17,9 @@ public class Bullet : MonoBehaviour
         rb.linearVelocity = transform.up * speed;
 
         Destroy(gameObject, lifetime);
+    }
+
+    public void DestroySelf() {
+        Destroy(gameObject);
     }
 }

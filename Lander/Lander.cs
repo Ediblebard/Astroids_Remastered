@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Lander : MonoBehaviour {
@@ -108,83 +110,20 @@ public class Lander : MonoBehaviour {
         
     }
 
+    bool canShoot = true;
     private void Shoot() {
-        Instantiate(
-            bulletPrefab,
-            firePoint.position,
-            firePoint.rotation
-        );
+        if (canShoot) {
+            Instantiate(bulletPrefab,firePoint.position,firePoint.rotation);
+            canShoot = false;
+            StartCoroutine(ShootTimer());
+        }        
     }
 
-    private void OnCollisionEnter2D(Collision2D collision2D) {
-        if (!collision2D.gameObject.TryGetComponent(out LandingPad landingPad)) {
-            Debug.Log("Crashed on the Terrain!");
-            OnLanded?.Invoke(this, new OnLandedEventArgs {
-                landingType = LandingType.WrongLandingArea,
-                dotVector = 0f,
-                landingSpeed = 0f,
-                scoreMultiplier = 0,
-                score = 0, 
-            });
-            SetState(State.GameOver);
-            return;
-        }
+    private IEnumerator ShootTimer() {
+        float timeToWait = .5f;
+        yield return new WaitForSeconds(timeToWait);
 
-        float softLandingVelocityMagnitude = 4f;
-        float relativeVelocityMagnitude = collision2D.relativeVelocity.magnitude;
-        if (relativeVelocityMagnitude > softLandingVelocityMagnitude) {
-            // Landed too hard!
-            Debug.Log("Landed too hard!");   
-            OnLanded?.Invoke(this, new OnLandedEventArgs {
-                landingType = LandingType.TooFastLanding,
-                dotVector = 0f,
-                landingSpeed = relativeVelocityMagnitude,
-                scoreMultiplier = 0,
-                score = 0, 
-            });
-            SetState(State.GameOver);
-            return;
-        }
-
-        float dotVector = Vector2.Dot(Vector2.up, transform.up);
-        float minDotVector = .90f;
-        if (dotVector < minDotVector) {
-            // Landed on a too steep angle!
-            Debug.Log("Landed on a too steep angle!");
-                OnLanded?.Invoke(this, new OnLandedEventArgs {
-                landingType = LandingType.TooSteepAngle,
-                dotVector = dotVector,
-                landingSpeed = relativeVelocityMagnitude,
-                scoreMultiplier = 0,
-                score = 0, 
-            });
-            SetState(State.GameOver);
-            return;
-        }
-
-        Debug.Log("Successful Landing!");
-        
-        float maxScoreAmountLandingAngle = 100;
-        float scoreDotVectorMultiplier = 10f;
-        float landingAngleScore = maxScoreAmountLandingAngle - Mathf.Abs(dotVector - 1f) * scoreDotVectorMultiplier * maxScoreAmountLandingAngle;
-
-        float maxScoreAmountLandingSpeed = 100;
-        float landingSpeedScore = (softLandingVelocityMagnitude - relativeVelocityMagnitude) * maxScoreAmountLandingSpeed;
-
-        Debug.Log("LandingAngleScore: " + landingAngleScore);
-        Debug.Log("LandingSpeedScore: " + landingSpeedScore);
-
-        int score = Mathf.RoundToInt((landingAngleScore + landingSpeedScore) * landingPad.GetScoreMultiplier());
-
-        Debug.Log("score: " + score);
-        OnLanded?.Invoke(this, new OnLandedEventArgs {
-            landingType = LandingType.Success,
-            dotVector = dotVector,
-            landingSpeed = relativeVelocityMagnitude,
-            scoreMultiplier = landingPad.GetScoreMultiplier(),
-            score = score, 
-        });
-        SetState(State.GameOver);
+        canShoot = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collider2D) {
