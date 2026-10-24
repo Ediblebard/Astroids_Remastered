@@ -46,6 +46,9 @@ public class Lander : MonoBehaviour {
     private float fuelAmountMax = 10f;
     private State state;
 
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform firePoint;
+ 
     private void Awake() {
         Instance = this;
 
@@ -95,11 +98,22 @@ public class Lander : MonoBehaviour {
                     ConsumeFuel();
                     OnRightForce?.Invoke(this, EventArgs.Empty);
                 }
+                if (GameInput.Instance.IsFireActionPressed()) {
+                    Shoot();
+                }
                 break;
             case State.GameOver:
                 break;
         }
         
+    }
+
+    private void Shoot() {
+        Instantiate(
+            bulletPrefab,
+            firePoint.position,
+            firePoint.rotation
+        );
     }
 
     private void OnCollisionEnter2D(Collision2D collision2D) {

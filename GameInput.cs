@@ -39,4 +39,8 @@ public class GameInput : MonoBehaviour
     public bool IsRightActionPressed() {
         return inputActions.Player.LanderRight.IsPressed();
     }
+
+    public bool IsFireActionPressed() {
+        return inputActions.Player.Fire.IsPressed();
+    }
 }
