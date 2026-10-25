@@ -8,6 +8,8 @@ public class AstroidRock : MonoBehaviour
     [SerializeField] private int rockHealth = 1;
     [SerializeField] private float rotationSpeed = 45f;
 
+    public event EventHandler OnDestroyed;
+
     private Rigidbody2D rb;
 
     private void Awake(){
@@ -15,7 +17,9 @@ public class AstroidRock : MonoBehaviour
     }
 
     private void Start(){
+        GameManager.Instance.RegisterAsteroid(this);
         rb.linearVelocity = transform.up * speed;
+        rotationSpeed = UnityEngine.Random.Range(-90f, 90f);
     }
 
     private void Update() {
@@ -31,6 +35,8 @@ public class AstroidRock : MonoBehaviour
     }
 
     public void DestroySelf() {
+        OnDestroyed?.Invoke(this,EventArgs.Empty);
+
         Destroy(gameObject);
     }    
 

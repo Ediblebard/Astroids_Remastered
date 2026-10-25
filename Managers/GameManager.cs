@@ -57,6 +57,14 @@ public class GameManager : MonoBehaviour
         }        
     }
 
+    public void RegisterAsteroid(AstroidRock astroidRock) {
+        astroidRock.OnDestroyed += HandleAstroidDestroyed;
+    }
+
+    private void HandleAstroidDestroyed(object sender, EventArgs e) {
+        Debug.Log("Gamemanager reporting that Astroid was destoryed");
+    }
+
     private void LoadCurrentLevel() {
         GameLevel gameLevel = GetGameLevel();
         GameLevel spawnedGameLevel = Instantiate(gameLevel, Vector3.zero, Quaternion.identity);
