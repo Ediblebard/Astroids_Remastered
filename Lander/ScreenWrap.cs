@@ -3,7 +3,7 @@ using UnityEngine;
 public class ScreenWrap : MonoBehaviour
 {
     [SerializeField] private Camera gameCamera;
-    [SerializeField] private Collider2D shipCollider;
+    [SerializeField] private Collider2D objectCollider;
 
     private Rigidbody2D rb;
 
@@ -14,8 +14,8 @@ public class ScreenWrap : MonoBehaviour
         if (gameCamera == null)
             gameCamera = Camera.main;
 
-        if (shipCollider == null)
-            shipCollider = GetComponent<Collider2D>();
+        if (objectCollider == null)
+            objectCollider = GetComponent<Collider2D>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -35,8 +35,8 @@ public class ScreenWrap : MonoBehaviour
         float top = gameCamera.transform.position.y + halfHeight;
 
         // Account for the size of the ship's collider.
-        float shipHalfWidth = shipCollider.bounds.extents.x;
-        float shipHalfHeight = shipCollider.bounds.extents.y;
+        float shipHalfWidth = objectCollider.bounds.extents.x;
+        float shipHalfHeight = objectCollider.bounds.extents.y;
 
         Vector3 position = transform.position;
 

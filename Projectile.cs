@@ -7,13 +7,11 @@ public class Projectile : MonoBehaviour
 
     private Rigidbody2D rb;
 
-    private void Awake()
-    {
+    private void Awake(){
         rb = GetComponent<Rigidbody2D>();
     }
 
-    private void Start()
-    {
+    private void Start(){
         rb.linearVelocity = transform.up * speed;
 
         Destroy(gameObject, lifetime);
