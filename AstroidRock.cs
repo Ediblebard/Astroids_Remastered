@@ -7,8 +7,21 @@ public class AstroidRock : MonoBehaviour
     [SerializeField] private string rockName = "";
     [SerializeField] private int rockHealth = 1;
     [SerializeField] private float rotationSpeed = 45f;
+    [SerializeField] private float maxSpreadAngle = 15f;
+    [SerializeField] private AstroidSize astroidSize;
 
-    public event EventHandler OnDestroyed;
+    public enum AstroidSize {
+        Small,
+        Medium,
+        Large,
+    }
+
+    public event EventHandler<OnDestroyedEventArgs> OnDestroyed;
+    public class OnDestroyedEventArgs : EventArgs {
+        public string rockName;
+        public AstroidSize astroidSize;
+    }
+
 
     private Rigidbody2D rb;
 
@@ -18,8 +31,15 @@ public class AstroidRock : MonoBehaviour
 
     private void Start(){
         GameManager.Instance.RegisterAsteroid(this);
-        rb.linearVelocity = transform.up * speed;
+        CreateRandomDirection();
         rotationSpeed = UnityEngine.Random.Range(-90f, 90f);
+    }
+
+    private void CreateRandomDirection() {
+        float randomAngle = UnityEngine.Random.Range(-maxSpreadAngle, maxSpreadAngle);
+        Quaternion randomRotation = Quaternion.Euler(0f, 0f, randomAngle);
+        Vector2 randomizedDirection = randomRotation * transform.up;
+        rb.linearVelocity = randomizedDirection * speed;        
     }
 
     private void Update() {
@@ -34,9 +54,16 @@ public class AstroidRock : MonoBehaviour
         return rockHealth;
     }
 
-    public void DestroySelf() {
-        OnDestroyed?.Invoke(this,EventArgs.Empty);
+    public AstroidSize GetAstroidSize() {
+        return astroidSize;
+    }
 
+    public void DestroySelf() {
+        OnDestroyed?.Invoke(this,new OnDestroyedEventArgs {
+            rockName = GetRockName(),
+            astroidSize = GetAstroidSize(),
+        });
+        GameManager.Instance.UnRegisterAsteroid(this);
         Destroy(gameObject);
     }    
 

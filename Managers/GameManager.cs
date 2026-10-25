@@ -58,11 +58,18 @@ public class GameManager : MonoBehaviour
     }
 
     public void RegisterAsteroid(AstroidRock astroidRock) {
+        Debug.Log("Added " + astroidRock + " to the list.");
         astroidRock.OnDestroyed += HandleAstroidDestroyed;
     }
 
-    private void HandleAstroidDestroyed(object sender, EventArgs e) {
-        Debug.Log("Gamemanager reporting that Astroid was destoryed");
+    private void HandleAstroidDestroyed(object sender, AstroidRock.OnDestroyedEventArgs e) {
+        Debug.Log("Gamemanager reporting that *" + e.rockName + "*  *" + e.astroidSize + "* was destoryed");
+        AddScore(100);        
+    }
+
+    public void UnRegisterAsteroid(AstroidRock astroidRock) {
+        Debug.Log("Removed " + astroidRock.GetRockName() + " from the list.");
+        astroidRock.OnDestroyed -= HandleAstroidDestroyed;
     }
 
     private void LoadCurrentLevel() {
