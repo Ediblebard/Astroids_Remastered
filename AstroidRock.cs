@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class AstroidRock : MonoBehaviour
@@ -20,6 +21,8 @@ public class AstroidRock : MonoBehaviour
     public class OnDestroyedEventArgs : EventArgs {
         public string rockName;
         public AstroidSize astroidSize;
+        public Vector3 location;
+        public Quaternion quaternion;
     }
 
 
@@ -62,6 +65,8 @@ public class AstroidRock : MonoBehaviour
         OnDestroyed?.Invoke(this,new OnDestroyedEventArgs {
             rockName = GetRockName(),
             astroidSize = GetAstroidSize(),
+            location = transform.position,
+            quaternion = quaternion.identity,
         });
         GameManager.Instance.UnRegisterAsteroid(this);
         Destroy(gameObject);

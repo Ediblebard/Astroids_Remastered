@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    [SerializeField] private AstroidSpawnerManager astroidSpawnerManager;
+
     private static int levelNumber = 1;
     private static int totalScore = 0;
 
@@ -58,17 +60,23 @@ public class GameManager : MonoBehaviour
     }
 
     public void RegisterAsteroid(AstroidRock astroidRock) {
-        Debug.Log("Added " + astroidRock + " to the list.");
+        Debug.Log("GameManager: Added " + astroidRock + " to the list.");
         astroidRock.OnDestroyed += HandleAstroidDestroyed;
     }
 
     private void HandleAstroidDestroyed(object sender, AstroidRock.OnDestroyedEventArgs e) {
-        Debug.Log("Gamemanager reporting that *" + e.rockName + "*  *" + e.astroidSize + "* was destoryed");
-        AddScore(100);        
+        Debug.Log("GameManager: Reporting that *" + e.rockName + "*  *" + e.astroidSize + "* *" + e.location  + " was destoryed");
+        astroidSpawnerManager.SpawnAstroidAtPosition(0,e.location, e.quaternion);
+        
+        /*if(e.astroidSize == AstroidRock.AstroidSize.Medium) {
+            astroidSpawnerManager.SpawnAstroidAtLocation(0,1);
+            //astroidSpawnerManager.SpawnAstroid(AstroidRock.AstroidSize.Small, e.location, Quaternion.identity);
+        }*/
+        //AddScore(100);        
     }
 
     public void UnRegisterAsteroid(AstroidRock astroidRock) {
-        Debug.Log("Removed " + astroidRock.GetRockName() + " from the list.");
+        Debug.Log("GameManager: Removed " + astroidRock.GetRockName() + " from the list.");
         astroidRock.OnDestroyed -= HandleAstroidDestroyed;
     }
 
@@ -84,7 +92,6 @@ public class GameManager : MonoBehaviour
         foreach (GameLevel gameLevel in gameLevelList) {
             if (gameLevel.GetLevelNumber() == levelNumber) {
                 return gameLevel;
-                
             }
         }
         return null;
