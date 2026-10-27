@@ -7,7 +7,7 @@ public class Lander : MonoBehaviour {
 
     private const float GRAVITY_NORMAL = 0f; //Normally 0.7f
 
-    public static Lander Instance { get; private set;}
+    public static Lander Instance { get; private set; }
 
     public event EventHandler OnUpForce;
     public event EventHandler OnRightForce;
@@ -15,6 +15,7 @@ public class Lander : MonoBehaviour {
     public event EventHandler OnBeforeForce;
     public event EventHandler OnCoinPickup;
     public event EventHandler OnFuelPickup;
+    public event EventHandler OnFireShoot;
     public event EventHandler<OnStateChangedEventArgs> OnStateChanged;
     public class OnStateChangedEventArgs : EventArgs {
         public State state;
@@ -44,13 +45,13 @@ public class Lander : MonoBehaviour {
     }
 
     private Rigidbody2D landerRigidBody2D;
-    [SerializeField]private float fuelAmount;
+    [SerializeField] private float fuelAmount;
     private float fuelAmountMax = 10f;
     private State state;
 
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firePoint;
- 
+
     private void Awake() {
         Instance = this;
 
@@ -70,14 +71,15 @@ public class Lander : MonoBehaviour {
             case State.WaitingToStart:
                 if (GameInput.Instance.IsUpActionPressed() ||
                     GameInput.Instance.IsLeftActionPressed() ||
-                    GameInput.Instance.IsRightActionPressed()) {
+                    GameInput.Instance.IsRightActionPressed() ||
+                    GameInput.Instance.IsFireActionPressed()) {
                     // Pressing any input
                     landerRigidBody2D.gravityScale = GRAVITY_NORMAL;
                     SetState(State.Normal);
                 }
                 break;
             case State.Normal:
-                if(fuelAmount <= 0f) {
+                if (fuelAmount <= 0f) {
                     // No fuel
                     return;
                 }
@@ -107,16 +109,17 @@ public class Lander : MonoBehaviour {
             case State.GameOver:
                 break;
         }
-        
+
     }
 
     bool canShoot = true;
     private void Shoot() {
         if (canShoot) {
-            Instantiate(bulletPrefab,firePoint.position,firePoint.rotation);
+            OnFireShoot?.Invoke(this, EventArgs.Empty);
+            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             canShoot = false;
             StartCoroutine(ShootTimer());
-        }        
+        }
     }
 
     private IEnumerator ShootTimer() {
@@ -127,9 +130,9 @@ public class Lander : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D collider2D) {
-        if (collider2D.gameObject.TryGetComponent(out FuelPickup fuelPickup)){
+        if (collider2D.gameObject.TryGetComponent(out FuelPickup fuelPickup)) {
             float addFuelAmount = 10f;
-            fuelAmount += addFuelAmount; 
+            fuelAmount += addFuelAmount;
             if (fuelAmount > fuelAmountMax) {
                 fuelAmount = fuelAmountMax;
             }
@@ -142,7 +145,7 @@ public class Lander : MonoBehaviour {
             coinPickup.DestroySelf();
         }
 
-        if (collider2D.gameObject.TryGetComponent(out WorldBounds worldBounds)){
+        if (collider2D.gameObject.TryGetComponent(out WorldBounds worldBounds)) {
             Debug.Log("We collided with " + worldBounds.GetDirection() + " world bounds!");
         }
     }
@@ -150,7 +153,7 @@ public class Lander : MonoBehaviour {
     private void SetState(State state) {
         this.state = state;
         OnStateChanged?.Invoke(this, new OnStateChangedEventArgs {
-           state = state, 
+            state = state,
         });
     }
 
@@ -170,7 +173,7 @@ public class Lander : MonoBehaviour {
     public float GetSpeedX() {
         return landerRigidBody2D.linearVelocityX;
     }
-    
+
     public float GetSpeedY() {
         return landerRigidBody2D.linearVelocityY;
     }

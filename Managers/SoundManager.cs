@@ -1,20 +1,20 @@
 using System;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour
-{
+public class SoundManager : MonoBehaviour {
     private const int SOUND_VOLUME_MAX = 10;
 
-    public static SoundManager Instance{ get; private set;}
+    public static SoundManager Instance { get; private set; }
 
     private static int soundVolume = 2;
 
     public event EventHandler OnSoundVolumeChanged;
-    
+
     [SerializeField] private AudioClip fuelPickupAudioClip;
     [SerializeField] private AudioClip coinPickupAudioClip;
     [SerializeField] private AudioClip crashAudioClip;
     [SerializeField] private AudioClip landingSuccessAudioClip;
+    [SerializeField] private AudioClip laserFireAudioClip;
 
     private void Awake() {
         Instance = this;
@@ -24,6 +24,11 @@ public class SoundManager : MonoBehaviour
         Lander.Instance.OnFuelPickup += Lander_OnFuelPickup;
         Lander.Instance.OnCoinPickup += Lander_OnCoinPickup;
         Lander.Instance.OnLanded += Lander_OnLanded;
+        Lander.Instance.OnFireShoot += Lander_OnFireShoot;
+    }
+
+    private void Lander_OnFireShoot(object sender, EventArgs e) {
+        AudioSource.PlayClipAtPoint(laserFireAudioClip, Camera.main.transform.position, GetSoundVolumeNormalized());
     }
 
     private void Lander_OnLanded(object sender, Lander.OnLandedEventArgs e) {
@@ -56,5 +61,9 @@ public class SoundManager : MonoBehaviour
 
     public float GetSoundVolumeNormalized() {
         return ((float)soundVolume) / SOUND_VOLUME_MAX;
+    }
+
+    public void PlayAstroidDestroyedSound() {
+        AudioSource.PlayClipAtPoint(crashAudioClip, Camera.main.transform.position, GetSoundVolumeNormalized());
     }
 }

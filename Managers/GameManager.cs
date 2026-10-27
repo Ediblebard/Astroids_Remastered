@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
-{
+public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
 
     [SerializeField] private AstroidSpawnerManager astroidSpawnerManager;
@@ -55,30 +54,43 @@ public class GameManager : MonoBehaviour
 
     private void Update() {
         if (isTimerActive) {
-            time += Time.deltaTime;    
-        }        
+            time += Time.deltaTime;
+        }
     }
 
     public void RegisterAsteroid(AstroidRock astroidRock) {
-        Debug.Log("GameManager: Added " + astroidRock + " to the list.");
+        //Debug.Log("GameManager: Added " + astroidRock + " to the list.");
         astroidRock.OnDestroyed += HandleAstroidDestroyed;
     }
 
-    private void HandleAstroidDestroyed(object sender, AstroidRock.OnDestroyedEventArgs e) {
-        Debug.Log("GameManager: Reporting that *" + e.rockName + "*  *" + e.astroidSize + "* *" + e.location  + " was destoryed");
-        astroidSpawnerManager.SpawnAstroidAtPosition(0,e.location, e.quaternion);
-        
-        /*if(e.astroidSize == AstroidRock.AstroidSize.Medium) {
-            astroidSpawnerManager.SpawnAstroidAtLocation(0,1);
-            //astroidSpawnerManager.SpawnAstroid(AstroidRock.AstroidSize.Small, e.location, Quaternion.identity);
-        }*/
-        //AddScore(100);        
-    }
-
     public void UnRegisterAsteroid(AstroidRock astroidRock) {
-        Debug.Log("GameManager: Removed " + astroidRock.GetRockName() + " from the list.");
+        //Debug.Log("GameManager: Removed " + astroidRock.GetRockName() + " from the list.");
         astroidRock.OnDestroyed -= HandleAstroidDestroyed;
     }
+
+    private void HandleAstroidDestroyed(object sender, AstroidRock.OnDestroyedEventArgs e) {
+        Debug.Log("GameManager: Reporting that *" + e.rockName + "*  *" + e.astroidSize + "* *" + e.location + " was destoryed");
+
+        switch (e.astroidSize) {
+            case AstroidRock.AstroidSize.Large:
+                astroidSpawnerManager.SpawnAstroidAtPosition(1, e.location, e.quaternion);
+                astroidSpawnerManager.SpawnAstroidAtPosition(1, e.location, e.quaternion);
+                AddScore(150);
+                break;
+            case AstroidRock.AstroidSize.Medium:
+                astroidSpawnerManager.SpawnAstroidAtPosition(0, e.location, e.quaternion);
+                astroidSpawnerManager.SpawnAstroidAtPosition(0, e.location, e.quaternion);
+                AddScore(100);
+                break;
+            case AstroidRock.AstroidSize.Small:
+                AddScore(50);
+                break;
+            default:
+                Debug.LogError("Error: Line 89 of GameManager.cs; Failed to handle Astroid Destroyed!");
+                break;
+        }
+    }
+
 
     private void LoadCurrentLevel() {
         GameLevel gameLevel = GetGameLevel();
@@ -130,7 +142,7 @@ public class GameManager : MonoBehaviour
             // No More Levels
             SceneLoader.LoadScene(SceneLoader.Scene.GameOverScene);
         } else {
-            SceneLoader.LoadScene(SceneLoader.Scene.GameScene);            
+            SceneLoader.LoadScene(SceneLoader.Scene.GameScene);
         }
     }
 
@@ -157,6 +169,6 @@ public class GameManager : MonoBehaviour
 
     public void UnPauseGame() {
         Time.timeScale = 1f;
-        OnGameUnPaused?.Invoke(this,EventArgs.Empty);
+        OnGameUnPaused?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -2,8 +2,7 @@ using System;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class AstroidRock : MonoBehaviour
-{
+public class AstroidRock : MonoBehaviour {
     [SerializeField] private float speed = 5f;
     [SerializeField] private string rockName = "";
     [SerializeField] private int rockHealth = 1;
@@ -28,11 +27,11 @@ public class AstroidRock : MonoBehaviour
 
     private Rigidbody2D rb;
 
-    private void Awake(){
+    private void Awake() {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    private void Start(){
+    private void Start() {
         GameManager.Instance.RegisterAsteroid(this);
         CreateRandomDirection();
         rotationSpeed = UnityEngine.Random.Range(-90f, 90f);
@@ -42,11 +41,11 @@ public class AstroidRock : MonoBehaviour
         float randomAngle = UnityEngine.Random.Range(-maxSpreadAngle, maxSpreadAngle);
         Quaternion randomRotation = Quaternion.Euler(0f, 0f, randomAngle);
         Vector2 randomizedDirection = randomRotation * transform.up;
-        rb.linearVelocity = randomizedDirection * speed;        
+        rb.linearVelocity = randomizedDirection * speed;
     }
 
     private void Update() {
-        transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);  
+        transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
     }
 
     public string GetRockName() {
@@ -62,26 +61,27 @@ public class AstroidRock : MonoBehaviour
     }
 
     public void DestroySelf() {
-        OnDestroyed?.Invoke(this,new OnDestroyedEventArgs {
+        OnDestroyed?.Invoke(this, new OnDestroyedEventArgs {
             rockName = GetRockName(),
             astroidSize = GetAstroidSize(),
             location = transform.position,
             quaternion = quaternion.identity,
         });
         GameManager.Instance.UnRegisterAsteroid(this);
+        SoundManager.Instance.PlayAstroidDestroyedSound();
         Destroy(gameObject);
-    }    
+    }
 
     private void OnTriggerEnter2D(Collider2D collider2D) {
         if (collider2D.gameObject.TryGetComponent(out Projectile projectile)) {
             projectile.DestroySelf();
             rockHealth--;
-            CheckRockStatus();        
+            CheckRockStatus();
         }
     }
 
     private void CheckRockStatus() {
-        if(rockHealth <= 0) {
+        if (rockHealth <= 0) {
             DestroySelf();
         }
     }
