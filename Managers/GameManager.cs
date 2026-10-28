@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
 
-    [SerializeField] private AstroidSpawnerManager astroidSpawnerManager;
+    //[SerializeField] private AstroidSpawnerManager astroidSpawnerManager;
 
     private static int levelNumber = 1;
     private static int totalScore = 0;
@@ -72,13 +72,14 @@ public class GameManager : MonoBehaviour {
         Debug.Log("GameManager: Reporting that *" + e.RockName + "*  *" + e.AstroidSize + "* *" + e.Location + " was destoryed");
         switch (e.AstroidSize) {
             case AstroidRock.AstroidSize.Large:
-                astroidSpawnerManager.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);
-                astroidSpawnerManager.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);
+                
+                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);
+                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);
                 AddScore(150);
                 break;
             case AstroidRock.AstroidSize.Medium:
-                astroidSpawnerManager.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Small, e.Location, e.Rotation);
-                astroidSpawnerManager.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Small, e.Location, e.Rotation);
+                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Small, e.Location, e.Rotation);
+                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Small, e.Location, e.Rotation);
                 AddScore(100);
                 break;
             case AstroidRock.AstroidSize.Small:
