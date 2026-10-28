@@ -23,23 +23,12 @@ public class SoundManager : MonoBehaviour {
     private void Start() {
         Lander.Instance.OnFuelPickup += Lander_OnFuelPickup;
         Lander.Instance.OnCoinPickup += Lander_OnCoinPickup;
-        Lander.Instance.OnLanded += Lander_OnLanded;
         Lander.Instance.OnFireShoot += Lander_OnFireShoot;
+        //Lander.Instance.OnLanded += Lander_OnLanded;
     }
 
     private void Lander_OnFireShoot(object sender, EventArgs e) {
         AudioSource.PlayClipAtPoint(laserFireAudioClip, Camera.main.transform.position, GetSoundVolumeNormalized());
-    }
-
-    private void Lander_OnLanded(object sender, Lander.OnLandedEventArgs e) {
-        switch (e.landingType) {
-            case Lander.LandingType.Success:
-                AudioSource.PlayClipAtPoint(landingSuccessAudioClip, Camera.main.transform.position, GetSoundVolumeNormalized());
-                break;
-            default:
-                AudioSource.PlayClipAtPoint(crashAudioClip, Camera.main.transform.position, GetSoundVolumeNormalized());
-                break;
-        }
     }
 
     private void Lander_OnCoinPickup(object sender, EventArgs e) {

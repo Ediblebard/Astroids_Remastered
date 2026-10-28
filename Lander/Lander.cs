@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Lander : MonoBehaviour {
@@ -19,23 +18,6 @@ public class Lander : MonoBehaviour {
     public event EventHandler<OnStateChangedEventArgs> OnStateChanged;
     public class OnStateChangedEventArgs : EventArgs {
         public State state;
-    }
-
-
-    public event EventHandler<OnLandedEventArgs> OnLanded;
-    public class OnLandedEventArgs : EventArgs {
-        public LandingType landingType;
-        public int score;
-        public float dotVector;
-        public float landingSpeed;
-        public float scoreMultiplier;
-    }
-
-    public enum LandingType {
-        Success,
-        WrongLandingArea,
-        TooSteepAngle,
-        TooFastLanding,
     }
 
     public enum State {

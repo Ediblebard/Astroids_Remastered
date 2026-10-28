@@ -20,29 +20,9 @@ public class LandedUI : MonoBehaviour
     }
  
     private void Start() {
-        Lander.Instance.OnLanded += Lander_OnLanded;
+        //Lander.Instance.OnLanded += Lander_OnLanded;
 
         Hide();
-    }
-
-    private void Lander_OnLanded(object sender, Lander.OnLandedEventArgs e) {
-        if (e.landingType == Lander.LandingType.Success) {
-            titleTextMesh.text = "SUCCESSFUL LANDING!";
-            nextButtonTextMesh.text = "CONTINUE";
-            nextButtonClickAction = GameManager.Instance.GoToNextLevel;
-        } else {
-            titleTextMesh.text = "<color=#ff0000>CRASHED!</color>";
-            nextButtonTextMesh.text = "RETRY";
-            nextButtonClickAction = GameManager.Instance.RetryLevel;
-        }
-
-        statsTextMesh.text = 
-            Mathf.Round(e.landingSpeed * 2f) + "\n" +
-            Mathf.Round(e.dotVector * 100f) + "\n" +
-            "x" + e.scoreMultiplier + "\n" +
-            GameManager.Instance.GetScore();//e.score;
-
-        Show();
     }
 
     private void Show() {

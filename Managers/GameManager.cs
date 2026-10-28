@@ -31,8 +31,8 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Start() {
+        //Lander.Instance.OnLanded += Lander_OnLanded;
         Lander.Instance.OnCoinPickup += Lander_OnCoinPickup;
-        Lander.Instance.OnLanded += Lander_OnLanded;
         Lander.Instance.OnStateChanged += Lander_OnStateChanged;
 
         GameInput.Instance.OnMenuButtonPressed += GameInput_OnMenuButtonPressed;
@@ -106,10 +106,6 @@ public class GameManager : MonoBehaviour {
             }
         }
         return null;
-    }
-
-    private void Lander_OnLanded(object sender, Lander.OnLandedEventArgs e) {
-        AddScore(e.score);
     }
 
     private void Lander_OnCoinPickup(object sender, EventArgs e) {
