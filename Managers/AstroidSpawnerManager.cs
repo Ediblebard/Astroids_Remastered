@@ -5,12 +5,26 @@ using UnityEngine;
 public class AstroidSpawnerManager : MonoBehaviour {
     [SerializeField] private List<AstroidRock> astroidRocks;
     [SerializeField] private List<Transform> spawnPositions;
-    [SerializeField] private int astroidType = 0;
+    [SerializeField] private int astroidType = 0; 
+
+    public enum AstroidRockPosition {
+        BottomCenter,
+        BottomRight,
+        BottomRightCorner,
+        Right,
+        TopRightCorner,
+        TopRight,
+        TopCenter,
+        TopLeft,
+        TopLeftCorner,
+        Left,
+        BottomLeftCorner,
+        BottomLeft
+    }
 
     private void Start() {
-        //SpawnAllSides();
-
-        Instantiate(astroidRocks[2], spawnPositions[0].position, spawnPositions[0].rotation);
+        //SpawnAllSides();        
+        WaveSpawner();
     }
 
     public void SpawnAstroidAtLocation(int astroidRockType, int spawnPosition) {
@@ -29,6 +43,11 @@ public class AstroidSpawnerManager : MonoBehaviour {
 
     public void SpawnAstroid(AstroidRock AstroidRockType, Vector3 SpawnPosition, Quaternion SpawnRotation) {
         Instantiate(AstroidRockType, SpawnPosition, SpawnRotation);
+    }
+
+    private void WaveSpawner() {
+        //Instantiate(astroidRocks[2], spawnPositions[0].position, spawnPositions[0].rotation);
+        SpawnAstroidAtLocation((int)AstroidRock.AstroidSize.Large,(int)AstroidRockPosition.TopCenter);
     }
 
     /*
