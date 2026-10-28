@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -18,13 +19,25 @@ public class AstroidRock : MonoBehaviour {
 
     public event EventHandler<OnDestroyedEventArgs> OnDestroyed;
     public class OnDestroyedEventArgs : EventArgs {
-        public string rockName;
-        public AstroidSize astroidSize;
-        public Vector3 location;
-        public Quaternion quaternion;
+        public string RockName { get; }
+        public AstroidSize AstroidSize { get; }
+        public Vector3 Location { get; }
+        public Quaternion Rotation { get; }
+
+        public OnDestroyedEventArgs(
+            string rockName,
+            AstroidSize astroidSize,
+            Vector3 location,
+            Quaternion rotation) {
+
+            RockName = rockName;
+            AstroidSize = astroidSize;
+            Location = location;
+            Rotation = rotation;
+        }
     }
 
-
+    private bool isDestroyed = false;
     private Rigidbody2D rb;
 
     private void Awake() {
@@ -32,7 +45,7 @@ public class AstroidRock : MonoBehaviour {
     }
 
     private void Start() {
-        GameManager.Instance.RegisterAsteroid(this);
+        GameManager.Instance.RegisterAstroid(this);
         CreateRandomDirection();
         rotationSpeed = UnityEngine.Random.Range(-90f, 90f);
     }
@@ -61,13 +74,17 @@ public class AstroidRock : MonoBehaviour {
     }
 
     public void DestroySelf() {
-        OnDestroyed?.Invoke(this, new OnDestroyedEventArgs {
-            rockName = GetRockName(),
-            astroidSize = GetAstroidSize(),
-            location = transform.position,
-            quaternion = quaternion.identity,
-        });
-        GameManager.Instance.UnRegisterAsteroid(this);
+        if (isDestroyed) return;
+        isDestroyed = true;
+
+        OnDestroyed?.Invoke(this, new OnDestroyedEventArgs(
+            GetRockName(),
+            GetAstroidSize(),
+            transform.position,
+            quaternion.identity
+            )
+        );
+        GameManager.Instance.UnRegisterAstroid(this);
         SoundManager.Instance.PlayAstroidDestroyedSound();
         Destroy(gameObject);
     }

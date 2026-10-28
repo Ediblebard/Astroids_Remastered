@@ -58,35 +58,34 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public void RegisterAsteroid(AstroidRock astroidRock) {
+    public void RegisterAstroid(AstroidRock astroidRock) {
         //Debug.Log("GameManager: Added " + astroidRock + " to the list.");
         astroidRock.OnDestroyed += HandleAstroidDestroyed;
     }
 
-    public void UnRegisterAsteroid(AstroidRock astroidRock) {
+    public void UnRegisterAstroid(AstroidRock astroidRock) {
         //Debug.Log("GameManager: Removed " + astroidRock.GetRockName() + " from the list.");
         astroidRock.OnDestroyed -= HandleAstroidDestroyed;
     }
 
     private void HandleAstroidDestroyed(object sender, AstroidRock.OnDestroyedEventArgs e) {
-        Debug.Log("GameManager: Reporting that *" + e.rockName + "*  *" + e.astroidSize + "* *" + e.location + " was destoryed");
-
-        switch (e.astroidSize) {
+        Debug.Log("GameManager: Reporting that *" + e.RockName + "*  *" + e.AstroidSize + "* *" + e.Location + " was destoryed");
+        switch (e.AstroidSize) {
             case AstroidRock.AstroidSize.Large:
-                astroidSpawnerManager.SpawnAstroidAtPosition(1, e.location, e.quaternion);
-                astroidSpawnerManager.SpawnAstroidAtPosition(1, e.location, e.quaternion);
+                astroidSpawnerManager.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);
+                astroidSpawnerManager.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);
                 AddScore(150);
                 break;
             case AstroidRock.AstroidSize.Medium:
-                astroidSpawnerManager.SpawnAstroidAtPosition(0, e.location, e.quaternion);
-                astroidSpawnerManager.SpawnAstroidAtPosition(0, e.location, e.quaternion);
+                astroidSpawnerManager.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Small, e.Location, e.Rotation);
+                astroidSpawnerManager.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Small, e.Location, e.Rotation);
                 AddScore(100);
                 break;
             case AstroidRock.AstroidSize.Small:
                 AddScore(50);
                 break;
             default:
-                Debug.LogError("Error: Line 89 of GameManager.cs; Failed to handle Astroid Destroyed!");
+                Debug.LogError("GameManager.cs | Error: Failed to handle Astroid Destroyed!");
                 break;
         }
     }
