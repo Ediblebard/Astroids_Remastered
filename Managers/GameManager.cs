@@ -146,6 +146,10 @@ public class GameManager : MonoBehaviour {
         SceneLoader.LoadScene(SceneLoader.Scene.GameScene);
     }
 
+    public void GoToGameOverScreen() {
+        SceneLoader.LoadScene(SceneLoader.Scene.GameOverScene);
+    }
+
     public int GetLevelNumber() {
         return levelNumber;
     }

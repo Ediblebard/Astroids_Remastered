@@ -28,7 +28,7 @@ public class AstroidWaveManager : MonoBehaviour
     private void WaveSpawner() {
         AstroidSpawnerManager.Instance.SpawnAstroidAtLocation(
             (int)AstroidRock.AstroidSize.Large,
-            (int)AstroidSpawnerManager.AstroidRockPosition.TopCenter);
+            (int)AstroidSpawnerManager.AstroidRockPosition.Left);
     }
 
     /*

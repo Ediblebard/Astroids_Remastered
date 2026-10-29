@@ -17,10 +17,15 @@ public class LanderVisuals : MonoBehaviour
         lander.OnLeftForce += Lander_OnLeftForce;
         lander.OnRightForce += Lander_OnRightForce; 
         lander.OnBeforeForce += Lander_OnBeforeForce;
+        lander.OnCrashed += Lander_OnCrashed;
 
         SetEnabledThrusterParticleSystem(leftThrusterParticleSystem, false);
         SetEnabledThrusterParticleSystem(middleThrusterParticleSystem, false);
         SetEnabledThrusterParticleSystem(rightThrusterParticleSystem, false);      
+    }
+
+    private void Lander_OnCrashed(object sender, EventArgs e) {
+        Instantiate(landerExplosionVFX, transform.position, Quaternion.identity);       
     }
 
     private void Start() {

@@ -15,6 +15,7 @@ public class Lander : MonoBehaviour {
     public event EventHandler OnCoinPickup;
     public event EventHandler OnFuelPickup;
     public event EventHandler OnFireShoot;
+    public event EventHandler OnCrashed;
     public event EventHandler<OnStateChangedEventArgs> OnStateChanged;
     public class OnStateChangedEventArgs : EventArgs {
         public State state;
@@ -27,6 +28,8 @@ public class Lander : MonoBehaviour {
     }
 
     private Rigidbody2D landerRigidBody2D;
+    [SerializeField] private GameObject sprite2D;
+    [SerializeField] private Collider2D thisCollider2D;
     [SerializeField] private float fuelAmount;
     private float fuelAmountMax = 10f;
     private State state;
@@ -64,6 +67,7 @@ public class Lander : MonoBehaviour {
             case State.Normal:
                 if (fuelAmount <= 0f) {
                     // No fuel
+                    state = State.GameOver;
                     return;
                 }
 
@@ -92,6 +96,9 @@ public class Lander : MonoBehaviour {
                 }
                 break;
             case State.GameOver:
+                float delay = 2f;
+                StartCoroutine(GameOverCoroutine(delay));
+
                 break;
         }
 
@@ -133,6 +140,18 @@ public class Lander : MonoBehaviour {
         if (collider2D.gameObject.TryGetComponent(out WorldBounds worldBounds)) {
             Debug.Log("We collided with " + worldBounds.GetDirection() + " world bounds!");
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision2D) {
+        OnCrashed?.Invoke(this, EventArgs.Empty);
+        state = State.GameOver;
+    }
+
+    private IEnumerator GameOverCoroutine(float timeToWait) {
+        yield return new WaitForSeconds(timeToWait);
+        //sprite2D.gameObject.SetActive(false);
+        //thisCollider2D.gameObject.SetActive(false);
+        GameManager.Instance.GoToGameOverScreen();
     }
 
     private void SetState(State state) {
