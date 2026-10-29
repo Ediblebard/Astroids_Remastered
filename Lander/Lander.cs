@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 public class Lander : MonoBehaviour {
-
+    //Hello world! Hi Dad!
     private const float GRAVITY_NORMAL = 0f; //Normally 0.7f
 
     public static Lander Instance { get; private set; }
