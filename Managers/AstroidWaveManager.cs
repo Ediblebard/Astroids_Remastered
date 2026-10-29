@@ -1,20 +1,34 @@
+using System;
 using UnityEngine;
 
 public class AstroidWaveManager : MonoBehaviour
 {
     public static AstroidWaveManager Instance {get; private set;}
-
+    [SerializeField] private float waveStartTimer = 0, waveDelay = 5f;
+    private bool canSpawn = true;
     private void Awake() {
         Instance = this;
     }
     
     private void Start() {
-        WaveSpawner();
+        waveStartTimer = GameManager.Instance.GetTime();
+    }
+
+    private void Update() {
+        CheckTimer();
+    }
+
+    private void CheckTimer() {
+        if ((GameManager.Instance.GetTime() - waveStartTimer) >= waveDelay && canSpawn) {
+            canSpawn = false;
+            WaveSpawner();
+        } 
     }
 
     private void WaveSpawner() {
-        //Instantiate(astroidRocks[2], spawnPositions[0].position, spawnPositions[0].rotation);
-        AstroidSpawnerManager.Instance.SpawnAstroidAtLocation((int)AstroidRock.AstroidSize.Large,(int)AstroidSpawnerManager.AstroidRockPosition.TopCenter);
+        AstroidSpawnerManager.Instance.SpawnAstroidAtLocation(
+            (int)AstroidRock.AstroidSize.Large,
+            (int)AstroidSpawnerManager.AstroidRockPosition.TopCenter);
     }
 
     /*

@@ -33,6 +33,7 @@ public class Lander : MonoBehaviour {
 
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firePoint;
+    [SerializeField] private WelcomeUI welcomeUI;
 
     private void Awake() {
         Instance = this;
@@ -65,6 +66,8 @@ public class Lander : MonoBehaviour {
                     // No fuel
                     return;
                 }
+
+                welcomeUI.Hide();
 
                 if (GameInput.Instance.IsUpActionPressed()) {
                     float force = 700f;
