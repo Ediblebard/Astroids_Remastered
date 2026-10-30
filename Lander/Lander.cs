@@ -12,6 +12,7 @@ public class Lander : MonoBehaviour {
     public event EventHandler OnRightForce;
     public event EventHandler OnLeftForce;
     public event EventHandler OnBeforeForce;
+    public event EventHandler OnAfterForce;
     public event EventHandler OnCoinPickup;
     public event EventHandler OnFuelPickup;
     public event EventHandler OnFireShoot;
@@ -65,13 +66,13 @@ public class Lander : MonoBehaviour {
                 }
                 break;
             case State.Normal:
+                OnAfterForce?.Invoke(this,EventArgs.Empty);
+
                 if (fuelAmount <= 0f) {
                     // No fuel
                     state = State.GameOver;
                     return;
-                }
-
-                welcomeUI.Hide();
+                }                
 
                 if (GameInput.Instance.IsUpActionPressed()) {
                     float force = 700f;
@@ -148,9 +149,9 @@ public class Lander : MonoBehaviour {
     }
 
     private IEnumerator GameOverCoroutine(float timeToWait) {
-        yield return new WaitForSeconds(timeToWait);
-        //sprite2D.gameObject.SetActive(false);
+        sprite2D.gameObject.SetActive(false);
         //thisCollider2D.gameObject.SetActive(false);
+        yield return new WaitForSeconds(timeToWait);
         GameManager.Instance.GoToGameOverScreen();
     }
 

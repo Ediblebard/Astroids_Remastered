@@ -19,7 +19,7 @@ public class AstroidWaveManager : MonoBehaviour
     }
 
     private void CheckTimer() {
-        if ((GameManager.Instance.GetTime() - waveStartTimer) >= waveDelay && canSpawn) {
+        if ((GameManager.Instance.GetTime() - waveStartTimer) >= waveDelay && canSpawn) { 
             canSpawn = false;
             WaveSpawner();
         } 

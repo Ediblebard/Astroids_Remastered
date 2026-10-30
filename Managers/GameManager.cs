@@ -72,9 +72,9 @@ public class GameManager : MonoBehaviour {
         Debug.Log("GameManager: Reporting that *" + e.RockName + "*  *" + e.AstroidSize + "* *" + e.Location + " was destoryed");
         switch (e.AstroidSize) {
             case AstroidRock.AstroidSize.Large:
-                
                 AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);
                 AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);
+                Debug.Log("LARYYYYYYYYYYYYY");
                 AddScore(150);
                 break;
             case AstroidRock.AstroidSize.Medium:
