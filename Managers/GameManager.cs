@@ -72,8 +72,11 @@ public class GameManager : MonoBehaviour {
         Debug.Log("GameManager: Reporting that *" + e.RockName + "*  *" + e.AstroidSize + "* *" + e.Location + " was destoryed");
         switch (e.AstroidSize) {
             case AstroidRock.AstroidSize.Large:
-                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);
-                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);                
+                float randomAngle = UnityEngine.Random.Range(0f, 360f);
+
+                Quaternion rotationA = Quaternion.Euler(0f, 0f, randomAngle);
+                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, rotationA);
+                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, rotationA);                
                 AddScore(150);
                 break;
             case AstroidRock.AstroidSize.Medium:

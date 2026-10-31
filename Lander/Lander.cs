@@ -153,7 +153,7 @@ public class Lander : MonoBehaviour {
 
     private IEnumerator GameOverCoroutine(float timeToWait) {
         sprite2D.gameObject.SetActive(false);
-        //thisCollider2D.gameObject.SetActive(false);
+        thisCollider2D.enabled = false;
         yield return new WaitForSeconds(timeToWait);
         GameManager.Instance.GoToGameOverScreen();
     }

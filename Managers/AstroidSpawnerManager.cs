@@ -32,7 +32,7 @@ public class AstroidSpawnerManager : MonoBehaviour {
         Instantiate(astroidRocks[astroidRockType], spawnPositions[spawnPosition].position, spawnPositions[spawnPosition].rotation);
     }
 
-    public void SpawnAstroidAtPosition(int astroidRockType, Vector3 spawnPosition, Quaternion quaternion) {
+    public void SpawnAstroidAtPosition(int astroidRockType, Vector2 spawnPosition, Quaternion quaternion) {
         Instantiate(astroidRocks[astroidRockType], spawnPosition, quaternion);        
     }
 
@@ -42,7 +42,7 @@ public class AstroidSpawnerManager : MonoBehaviour {
         }
     }
 
-    public void SpawnAstroid(AstroidRock AstroidRockType, Vector3 SpawnPosition, Quaternion SpawnRotation) {
+    public void SpawnAstroid(AstroidRock AstroidRockType, Vector2 SpawnPosition, Quaternion SpawnRotation) {
         Instantiate(AstroidRockType, SpawnPosition, SpawnRotation);
     }
 

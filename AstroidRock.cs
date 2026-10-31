@@ -21,13 +21,13 @@ public class AstroidRock : MonoBehaviour {
     public class OnDestroyedEventArgs : EventArgs {
         public string RockName { get; }
         public AstroidSize AstroidSize { get; }
-        public Vector3 Location { get; }
+        public Vector2 Location { get; }
         public Quaternion Rotation { get; }
 
         public OnDestroyedEventArgs(
             string rockName,
             AstroidSize astroidSize,
-            Vector3 location,
+            Vector2 location,
             Quaternion rotation) {
 
             RockName = rockName;
