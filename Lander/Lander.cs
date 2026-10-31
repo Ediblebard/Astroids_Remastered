@@ -66,13 +66,13 @@ public class Lander : MonoBehaviour {
                 }
                 break;
             case State.Normal:
-                OnAfterForce?.Invoke(this,EventArgs.Empty);
+                OnAfterForce?.Invoke(this, EventArgs.Empty);
 
                 if (fuelAmount <= 0f) {
                     // No fuel
                     state = State.GameOver;
                     return;
-                }                
+                }
 
                 if (GameInput.Instance.IsUpActionPressed()) {
                     float force = 700f;
@@ -118,7 +118,6 @@ public class Lander : MonoBehaviour {
     private IEnumerator ShootTimer() {
         float timeToWait = .5f;
         yield return new WaitForSeconds(timeToWait);
-
         canShoot = true;
     }
 
@@ -143,9 +142,13 @@ public class Lander : MonoBehaviour {
         }
     }
 
+    bool hasCrashed = false;
     private void OnCollisionEnter2D(Collision2D collision2D) {
-        OnCrashed?.Invoke(this, EventArgs.Empty);
-        state = State.GameOver;
+        if (!hasCrashed) {
+            hasCrashed = true;
+            OnCrashed?.Invoke(this, EventArgs.Empty);
+            state = State.GameOver;
+        }
     }
 
     private IEnumerator GameOverCoroutine(float timeToWait) {

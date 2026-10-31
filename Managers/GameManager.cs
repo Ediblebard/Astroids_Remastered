@@ -73,8 +73,7 @@ public class GameManager : MonoBehaviour {
         switch (e.AstroidSize) {
             case AstroidRock.AstroidSize.Large:
                 AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);
-                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);
-                Debug.Log("LARYYYYYYYYYYYYY");
+                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);                
                 AddScore(150);
                 break;
             case AstroidRock.AstroidSize.Medium:

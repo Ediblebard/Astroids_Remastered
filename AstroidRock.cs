@@ -38,7 +38,6 @@ public class AstroidRock : MonoBehaviour {
     }
 
     private bool isDestroyed = false;
-    //private bool hitPlayer = false;
     private Rigidbody2D rb;
 
     private void Awake() {
@@ -78,11 +77,6 @@ public class AstroidRock : MonoBehaviour {
         if (isDestroyed) return;
         isDestroyed = true;
 
-       /* if (hitPlayer) {
-          Destroy(gameObject); 
-          return;  
-        } */
-
         OnDestroyed?.Invoke(this, new OnDestroyedEventArgs(
             GetRockName(),
             GetAstroidSize(),
@@ -101,12 +95,6 @@ public class AstroidRock : MonoBehaviour {
             rockHealth--;
             CheckRockStatus();
         }
-    }
-    
-
-    private void OnCollisionEnter2D(Collision2D collision2D) {
-        //hitPlayer = true;
-        //DestroySelf();
     }
 
     private void CheckRockStatus() {
