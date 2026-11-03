@@ -72,16 +72,11 @@ public class GameManager : MonoBehaviour {
         Debug.Log("GameManager: Reporting that *" + e.RockName + "*  *" + e.AstroidSize + "* *" + e.Location + " was destoryed");
         switch (e.AstroidSize) {
             case AstroidRock.AstroidSize.Large:
-                float randomAngle = UnityEngine.Random.Range(0f, 360f);
-
-                Quaternion rotationA = Quaternion.Euler(0f, 0f, randomAngle);
-                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, rotationA);
-                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Medium, e.Location, rotationA);                
+                SpawnChildAstroids(AstroidRock.AstroidSize.Medium, e.Location, e.Rotation);
                 AddScore(150);
                 break;
             case AstroidRock.AstroidSize.Medium:
-                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Small, e.Location, e.Rotation);
-                AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)AstroidRock.AstroidSize.Small, e.Location, e.Rotation);
+                SpawnChildAstroids(AstroidRock.AstroidSize.Small, e.Location, e.Rotation);
                 AddScore(100);
                 break;
             case AstroidRock.AstroidSize.Small:
@@ -93,6 +88,17 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    private void SpawnChildAstroids(AstroidRock.AstroidSize astroidSize, Vector2 position, Quaternion rotation) {
+        float randomAngle = UnityEngine.Random.Range(0f, 360f);
+
+        Vector2 directionA = Quaternion.Euler(0f, 0f, randomAngle) * Vector2.up;
+        Vector2 directionB = -directionA;
+
+        AstroidRock rockA = AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)astroidSize, position, rotation);
+        rockA.SetInitalDirection(directionA);
+        AstroidRock rockB = AstroidSpawnerManager.Instance.SpawnAstroidAtPosition((int)astroidSize, position, rotation);
+        rockB.SetInitalDirection(directionB);
+    }
 
     private void LoadCurrentLevel() {
         GameLevel gameLevel = GetGameLevel();

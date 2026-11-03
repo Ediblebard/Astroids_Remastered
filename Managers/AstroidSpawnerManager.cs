@@ -5,9 +5,9 @@ using UnityEngine;
 public class AstroidSpawnerManager : MonoBehaviour {
     [SerializeField] private List<AstroidRock> astroidRocks;
     [SerializeField] private List<Transform> spawnPositions;
-    [SerializeField] private int astroidType = 0; 
+    [SerializeField] private int astroidType = 0;
 
-    public static AstroidSpawnerManager Instance {get; private set;}
+    public static AstroidSpawnerManager Instance { get; private set; }
 
     private void Awake() {
         Instance = this;
@@ -32,8 +32,8 @@ public class AstroidSpawnerManager : MonoBehaviour {
         Instantiate(astroidRocks[astroidRockType], spawnPositions[spawnPosition].position, spawnPositions[spawnPosition].rotation);
     }
 
-    public void SpawnAstroidAtPosition(int astroidRockType, Vector2 spawnPosition, Quaternion quaternion) {
-        Instantiate(astroidRocks[astroidRockType], spawnPosition, quaternion);        
+    public AstroidRock SpawnAstroidAtPosition(int astroidRockType, Vector2 spawnPosition, Quaternion quaternion) {
+        return Instantiate(astroidRocks[astroidRockType], spawnPosition, quaternion);
     }
 
     private void SpawnAllSides() {

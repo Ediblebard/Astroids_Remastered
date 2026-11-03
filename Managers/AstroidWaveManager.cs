@@ -1,15 +1,14 @@
 using System;
 using UnityEngine;
 
-public class AstroidWaveManager : MonoBehaviour
-{
-    public static AstroidWaveManager Instance {get; private set;}
+public class AstroidWaveManager : MonoBehaviour {
+    public static AstroidWaveManager Instance { get; private set; }
     [SerializeField] private float waveStartTimer = 0, waveDelay = 5f;
     private bool canSpawn = true;
     private void Awake() {
         Instance = this;
     }
-    
+
     private void Start() {
         waveStartTimer = GameManager.Instance.GetTime();
     }
@@ -19,10 +18,10 @@ public class AstroidWaveManager : MonoBehaviour
     }
 
     private void CheckTimer() {
-        if ((GameManager.Instance.GetTime() - waveStartTimer) >= waveDelay && canSpawn) { 
+        if ((GameManager.Instance.GetTime() - waveStartTimer) >= waveDelay && canSpawn) {
             canSpawn = false;
             WaveSpawner();
-        } 
+        }
     }
 
     private void WaveSpawner() {

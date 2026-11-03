@@ -19,16 +19,17 @@ public class AstroidRock : MonoBehaviour {
 
     public event EventHandler<OnDestroyedEventArgs> OnDestroyed;
     public class OnDestroyedEventArgs : EventArgs {
-        public string RockName { get; }
-        public AstroidSize AstroidSize { get; }
-        public Vector2 Location { get; }
-        public Quaternion Rotation { get; }
+        public string RockName { get; private set; }
+        public AstroidSize AstroidSize { get; private set; }
+        public Vector2 Location { get; private set; }
+        public Quaternion Rotation { get; private set; }
 
         public OnDestroyedEventArgs(
             string rockName,
             AstroidSize astroidSize,
             Vector2 location,
-            Quaternion rotation) {
+            Quaternion rotation
+            ) {
 
             RockName = rockName;
             AstroidSize = astroidSize;
@@ -37,6 +38,7 @@ public class AstroidRock : MonoBehaviour {
         }
     }
 
+    private bool hasInitialDirection = false;
     private bool isDestroyed = false;
     private Rigidbody2D rb;
 
@@ -46,8 +48,15 @@ public class AstroidRock : MonoBehaviour {
 
     private void Start() {
         GameManager.Instance.RegisterAstroid(this);
-        CreateRandomDirection();
+        if (!hasInitialDirection) {
+            CreateRandomDirection();
+        }
         rotationSpeed = UnityEngine.Random.Range(-90f, 90f);
+    }
+
+    public void SetInitalDirection(Vector2 direction) {
+        hasInitialDirection = true;
+        rb.linearVelocity = direction.normalized * speed;
     }
 
     private void CreateRandomDirection() {
@@ -73,6 +82,7 @@ public class AstroidRock : MonoBehaviour {
         return astroidSize;
     }
 
+
     public void DestroySelf() {
         if (isDestroyed) return;
         isDestroyed = true;
@@ -81,8 +91,7 @@ public class AstroidRock : MonoBehaviour {
             GetRockName(),
             GetAstroidSize(),
             transform.position,
-            quaternion.identity
-            )
+            quaternion.identity)
         );
         GameManager.Instance.UnRegisterAstroid(this);
         SoundManager.Instance.PlayAstroidDestroyedSound();

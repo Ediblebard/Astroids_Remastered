@@ -99,10 +99,16 @@ public class Lander : MonoBehaviour {
             case State.GameOver:
                 float delay = 2f;
                 StartCoroutine(GameOverCoroutine(delay));
-
                 break;
         }
 
+    }
+
+    private IEnumerator GameOverCoroutine(float timeToWait) {
+        sprite2D.gameObject.SetActive(false);
+        thisCollider2D.enabled = false;
+        yield return new WaitForSeconds(timeToWait);
+        GameManager.Instance.GoToGameOverScreen();
     }
 
     bool canShoot = true;
@@ -151,12 +157,6 @@ public class Lander : MonoBehaviour {
         }
     }
 
-    private IEnumerator GameOverCoroutine(float timeToWait) {
-        sprite2D.gameObject.SetActive(false);
-        thisCollider2D.enabled = false;
-        yield return new WaitForSeconds(timeToWait);
-        GameManager.Instance.GoToGameOverScreen();
-    }
 
     private void SetState(State state) {
         this.state = state;
