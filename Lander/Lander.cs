@@ -32,7 +32,7 @@ public class Lander : MonoBehaviour {
     [SerializeField] private GameObject sprite2D;
     [SerializeField] private Collider2D thisCollider2D;
     [SerializeField] private float fuelAmount;
-    private float fuelAmountMax = 10f;
+    private float fuelAmountMax = 1000f;
     private State state;
 
     [SerializeField] private GameObject bulletPrefab;

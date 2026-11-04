@@ -20,14 +20,68 @@ public class AstroidWaveManager : MonoBehaviour {
     private void CheckTimer() {
         if ((GameManager.Instance.GetTime() - waveStartTimer) >= waveDelay && canSpawn) {
             canSpawn = false;
-            WaveSpawner();
+            WaveSpawner(GameManager.Instance.GetLevelNumber());
         }
     }
 
-    private void WaveSpawner() {
+    private void WaveOne() {
         AstroidSpawnerManager.Instance.SpawnAstroidAtLocation(
-            (int)AstroidRock.AstroidSize.Large,
+            (int)AstroidRock.AstroidSize.Small,
             (int)AstroidSpawnerManager.AstroidRockPosition.Left);
+        waveStartTimer = GameManager.Instance.GetTime();
+        canSpawn = true;
+    }
+
+    public void WaveSpawner(int currentLevel) {
+        switch (currentLevel) {
+            case 1:
+                spawnAstroid(AstroidRock.AstroidSize.Small, AstroidSpawnerManager.AstroidRockPosition.Left);
+                break;
+            case 2:
+                spawnAstroid(AstroidRock.AstroidSize.Small, AstroidSpawnerManager.AstroidRockPosition.Right);
+                spawnAstroid(AstroidRock.AstroidSize.Small, AstroidSpawnerManager.AstroidRockPosition.TopCenter);
+                break;
+            case 3:
+                spawnAstroid(AstroidRock.AstroidSize.Medium, AstroidSpawnerManager.AstroidRockPosition.BottomCenter);
+                break;
+            case 4:
+                spawnAstroid(AstroidRock.AstroidSize.Medium, AstroidSpawnerManager.AstroidRockPosition.TopCenter);
+                spawnAstroid(AstroidRock.AstroidSize.Small, AstroidSpawnerManager.AstroidRockPosition.Right);
+                break;
+            case 5:
+                spawnAstroid(AstroidRock.AstroidSize.Medium, AstroidSpawnerManager.AstroidRockPosition.TopCenter);
+                spawnAstroid(AstroidRock.AstroidSize.Small, AstroidSpawnerManager.AstroidRockPosition.Right);
+                spawnAstroid(AstroidRock.AstroidSize.Small, AstroidSpawnerManager.AstroidRockPosition.Left);
+                break;
+            case 6:
+                spawnAstroid(AstroidRock.AstroidSize.Large, AstroidSpawnerManager.AstroidRockPosition.TopCenter);
+                break;
+            case 7:
+                spawnAstroid(AstroidRock.AstroidSize.Large, AstroidSpawnerManager.AstroidRockPosition.TopCenter);
+                spawnAstroid(AstroidRock.AstroidSize.Small, AstroidSpawnerManager.AstroidRockPosition.Right);
+                break;
+            case 8:
+                spawnAstroid(AstroidRock.AstroidSize.Large, AstroidSpawnerManager.AstroidRockPosition.TopCenter);
+                spawnAstroid(AstroidRock.AstroidSize.Small, AstroidSpawnerManager.AstroidRockPosition.Right);
+                spawnAstroid(AstroidRock.AstroidSize.Small, AstroidSpawnerManager.AstroidRockPosition.BottomCenter);
+                break;
+            case 9:
+                spawnAstroid(AstroidRock.AstroidSize.Large, AstroidSpawnerManager.AstroidRockPosition.TopCenter);
+                spawnAstroid(AstroidRock.AstroidSize.Medium, AstroidSpawnerManager.AstroidRockPosition.BottomCenter);
+                break;
+            case 10:
+                spawnAstroid(AstroidRock.AstroidSize.Large, AstroidSpawnerManager.AstroidRockPosition.TopCenter);
+                spawnAstroid(AstroidRock.AstroidSize.Medium, AstroidSpawnerManager.AstroidRockPosition.BottomCenter);
+                spawnAstroid(AstroidRock.AstroidSize.Medium, AstroidSpawnerManager.AstroidRockPosition.Right);
+                break;
+            default:
+                Debug.LogError("Ran out of levels Dude!");
+                break;
+        }
+    }
+
+    private void spawnAstroid(AstroidRock.AstroidSize astroidSize, AstroidSpawnerManager.AstroidRockPosition astroidRockPosition) {
+        AstroidSpawnerManager.Instance.SpawnAstroidAtLocation((int)astroidSize,(int)astroidRockPosition);
     }
 
     /*

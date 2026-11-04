@@ -1,12 +1,9 @@
 using System;
-using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
-
-    //[SerializeField] private AstroidSpawnerManager astroidSpawnerManager;
 
     private static int levelNumber = 1;
     private static int totalScore = 0;
@@ -19,7 +16,7 @@ public class GameManager : MonoBehaviour {
     public event EventHandler OnGamePaused;
     public event EventHandler OnGameUnPaused;
 
-    [SerializeField] private List<GameLevel> gameLevelList;
+    [SerializeField] private GameLevel activeGameLevel;
     [SerializeField] private CinemachineCamera cinemachineCamera;
 
     private int score;
@@ -31,12 +28,10 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Start() {
-        //Lander.Instance.OnLanded += Lander_OnLanded;
-        Lander.Instance.OnCoinPickup += Lander_OnCoinPickup;
         Lander.Instance.OnStateChanged += Lander_OnStateChanged;
 
         GameInput.Instance.OnMenuButtonPressed += GameInput_OnMenuButtonPressed;
-        LoadCurrentLevel();
+        LoadGameScene();
     }
 
     private void GameInput_OnMenuButtonPressed(object sender, EventArgs e) {
@@ -58,9 +53,13 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    [SerializeField] private int smallAstroidsRemaining = 0;
     public void RegisterAstroid(AstroidRock astroidRock) {
         //Debug.Log("GameManager: Added " + astroidRock + " to the list.");
         astroidRock.OnDestroyed += HandleAstroidDestroyed;
+        if(astroidRock.GetAstroidSize() == AstroidRock.AstroidSize.Small) {
+            smallAstroidsRemaining++;
+        }
     }
 
     public void UnRegisterAstroid(AstroidRock astroidRock) {
@@ -81,10 +80,19 @@ public class GameManager : MonoBehaviour {
                 break;
             case AstroidRock.AstroidSize.Small:
                 AddScore(50);
+                smallAstroidsRemaining--;
+                CheckRemainingAstroids();
                 break;
             default:
                 Debug.LogError("GameManager.cs | Error: Failed to handle Astroid Destroyed!");
                 break;
+        }
+    }
+
+    private void CheckRemainingAstroids() {
+        if(smallAstroidsRemaining <= 0) {
+            levelNumber++;
+            AstroidWaveManager.Instance.WaveSpawner(GetLevelNumber());
         }
     }
 
@@ -100,21 +108,11 @@ public class GameManager : MonoBehaviour {
         rockB.SetInitalDirection(directionB);
     }
 
-    private void LoadCurrentLevel() {
-        GameLevel gameLevel = GetGameLevel();
-        GameLevel spawnedGameLevel = Instantiate(gameLevel, Vector3.zero, Quaternion.identity);
+    private void LoadGameScene() {
+        GameLevel spawnedGameLevel = Instantiate(activeGameLevel, Vector3.zero, Quaternion.identity);
         Lander.Instance.transform.position = spawnedGameLevel.GetLanderStartPosition();
         cinemachineCamera.Target.TrackingTarget = spawnedGameLevel.GetCameraStartTargetTransform();
-        CinemachineCameraZoom2D.Instance.SetTargetOrthographicSize(spawnedGameLevel.GetZoomedOutOrthographicSize());
-    }
-
-    private GameLevel GetGameLevel() {
-        foreach (GameLevel gameLevel in gameLevelList) {
-            if (gameLevel.GetLevelNumber() == levelNumber) {
-                return gameLevel;
-            }
-        }
-        return null;
+        CinemachineCameraZoom2D.Instance.SetTargetOrthographicSize(spawnedGameLevel.GetZoomedOutOrthographicSize());        
     }
 
     private void Lander_OnCoinPickup(object sender, EventArgs e) {
@@ -136,18 +134,6 @@ public class GameManager : MonoBehaviour {
 
     public int GetTotalScore() {
         return totalScore;
-    }
-
-    public void GoToNextLevel() {
-        levelNumber++;
-        totalScore += score;
-
-        if (GetGameLevel() == null) {
-            // No More Levels
-            SceneLoader.LoadScene(SceneLoader.Scene.GameOverScene);
-        } else {
-            SceneLoader.LoadScene(SceneLoader.Scene.GameScene);
-        }
     }
 
     public void RetryLevel() {
